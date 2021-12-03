@@ -8,28 +8,47 @@
 
 
     <div class="card">
-        <form action="" method="get" class="card-header">
+        <form action="{{ route('product.filter') }}" method="get" class="card-header">
             <div class="form-row justify-content-between">
                 <div class="col-md-2">
-                    <input type="text" name="title" placeholder="Product Title" class="form-control">
+                    <input type="text" name="title" value="{{ isset($title) ? $title : old('title') }}"
+                           placeholder="Product Title" class="form-control">
+                    <span class="text-danger">{{ $errors->first('title') }}</span>
                 </div>
+
                 <div class="col-md-2">
                     <select name="variant" id="" class="form-control">
-
+                        @foreach ($variants as $variant)
+                            <optgroup label="{{ $variant->title }}">
+                                @foreach($variant->productVariants as $product_variant)
+                                    <option value="{{ $product_variant->variant }}" {{ isset($variant) && $product_variant->variant == $variant ? 'selected' : '' }}>{{ $product_variant->variant }}</option>
+                                @endforeach
+                            </optgroup>
+                        @endforeach
                     </select>
+                    <span class="text-danger">{{ $errors->first('variant') }}</span>
                 </div>
-
                 <div class="col-md-3">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">Price Range</span>
                         </div>
-                        <input type="text" name="price_from" aria-label="First name" placeholder="From" class="form-control">
-                        <input type="text" name="price_to" aria-label="Last name" placeholder="To" class="form-control">
+                        <input type="text" name="price_from" value="{{ isset($price_from) ? $price_from : old('price_from') }}"
+                               aria-label="First name" placeholder="From"
+                               class="form-control">
+                        <span class="text-danger">{{ $errors->first('price_from') }}</span>
+
+                        <input type="text" name="price_to" aria-label="Last name"
+                               value="{{ isset($price_to) ? $price_to : old('price_to') }}" placeholder="To" class="form-control">
+                        <span class="text-danger">{{ $errors->first('price_to') }}</span>
+
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <input type="date" name="date" placeholder="Date" class="form-control">
+                    <input type="date" name="date" placeholder="Date" value="{{ isset($date) ? $date : old('date') }}"
+                           class="form-control">
+                    <span class="text-danger">{{ $errors->first('date') }}</span>
+
                 </div>
                 <div class="col-md-1">
                     <button type="submit" class="btn btn-primary float-right"><i class="fa fa-search"></i></button>
@@ -54,28 +73,35 @@
                     @foreach ($products as $key=> $product)
                         <tr>
                             <td width="5%">{{ $key+1 }}</td>
-                            <td width="10%">{{ $product->title }} <br> Created at : {{ \Carbon\Carbon::parse($product->created_at)->diffForHumans() }}</td>
-                            <td width="50%">{{ $product->description }}</td>
-                            <td>
+                            <td width="10%">{{ $product->title }} <br> Created at
+                                : {{ \Carbon\Carbon::parse($product->created_at)->diffForHumans() }}</td>
+                            <td width="40%">{{ $product->description }}</td>
+                            <td width="40%">
                                 <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant">
 
                                     <dt class="col-sm-3 pb-0">
                                         @foreach ($product->variantPrices as $k=> $variant_price)
-                                            <p style="white-space: nowrap;margin-bottom: 8px">{{ @$variant_price->variantOne->variant }} / {{ @$variant_price->variantTwo->variant }}/ {{ @$variant_price->variantThree->variant }}</p>
+                                            <p style="white-space: nowrap;margin-bottom: 8px">{{ @$variant_price->variantOne->variant }}
+                                                / {{ @$variant_price->variantTwo->variant }}
+                                                / {{ @$variant_price->variantThree->variant }}</p>
                                         @endforeach
                                     </dt>
                                     <dd class="col-sm-9">
                                         <dl class="row mb-0">
                                             @foreach ($product->variantPrices as $k=> $variant_price)
-                                                <dt class="col-sm-4 pb-0">Price : {{ number_format($variant_price->price,2) }}</dt>
-                                                <dd class="col-sm-8 pb-0">InStock : {{ number_format($variant_price->stock,2) }}</dd>
+                                                <dt class="col-sm-4 pb-0">Price
+                                                    : {{ number_format($variant_price->price,2) }}</dt>
+                                                <dd class="col-sm-8 pb-0">InStock
+                                                    : {{ number_format($variant_price->stock,2) }}</dd>
                                             @endforeach
                                         </dl>
                                     </dd>
                                 </dl>
-                                <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more</button>
+                                <button onclick="$('#variant').toggleClass('h-auto')" class="btn btn-sm btn-link">Show
+                                    more
+                                </button>
                             </td>
-                            <td>
+                            <td width="5%">
                                 <div class="btn-group btn-group-sm">
                                     <a href="{{ route('product.edit', $product->id) }}" class="btn btn-success">Edit</a>
                                 </div>
@@ -102,3 +128,12 @@
     </div>
 
 @endsection
+@push('js')
+    <script>
+        (function ($) {
+            'use strict';
+            $(document).ready(function () {
+            });
+        })(jQuery)
+    </script>
+@endpush
