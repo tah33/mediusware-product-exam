@@ -109,7 +109,11 @@ export default {
         variants: {
             type: Array,
             required: true
-        }
+        },
+        id: {
+            type: Number,
+            required: true
+        },
     },
     data() {
         return {
@@ -198,12 +202,16 @@ export default {
         },
         uploadSuccess: function(file, response) {
             this.images.push(response);
+        },
+        edit()
+        {
+
         }
 
 
     },
     mounted() {
-        console.log('Component mounted.')
+        console.log('Component mounted.');
     }
 }
 </script>

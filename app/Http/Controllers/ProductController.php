@@ -115,7 +115,7 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $variants = Variant::all();
-        return view('products.edit', compact('variants'));
+        return view('products.edit', compact('variants','product'));
     }
 
     public function update(Request $request, Product $product)
