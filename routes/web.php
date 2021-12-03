@@ -28,4 +28,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('blog-category', 'BlogCategoryController');
 
     Route::get('product-filter',[\App\Http\Controllers\ProductController::class,'filter'])->name('product.filter');
+    Route::post('product/images',[\App\Http\Controllers\ProductController::class,'images'])->name('product.images');
 });

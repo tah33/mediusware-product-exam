@@ -2011,7 +2011,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -2038,11 +2037,11 @@ __webpack_require__.r(__webpack_exports__);
       }],
       product_variant_prices: [],
       dropzoneOptions: {
-        url: 'https://httpbin.org/post',
+        url: '/product/images',
         thumbnailWidth: 150,
         maxFilesize: 0.5,
         headers: {
-          "My-Awesome-Header": "header value"
+          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         }
       }
     };
@@ -2108,12 +2107,16 @@ __webpack_require__.r(__webpack_exports__);
         product_variant: this.product_variant,
         product_variant_prices: this.product_variant_prices
       };
+      console.log(this.images);
       axios.post('/product', product).then(function (response) {
         console.log(response.data);
       })["catch"](function (error) {
         console.log(error);
       });
       console.log(product);
+    },
+    uploadSuccess: function uploadSuccess(file, response) {
+      this.images.push(response);
     }
   },
   mounted: function mounted() {
@@ -50566,7 +50569,8 @@ var render = function() {
             [
               _c("vue-dropzone", {
                 ref: "myVueDropzone",
-                attrs: { id: "dropzone", options: _vm.dropzoneOptions }
+                attrs: { id: "dropzone", options: _vm.dropzoneOptions },
+                on: { "vdropzone-success": _vm.uploadSuccess }
               })
             ],
             1

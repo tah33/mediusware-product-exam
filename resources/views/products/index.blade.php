@@ -21,7 +21,8 @@
                         @foreach ($variants as $variant)
                             <optgroup label="{{ $variant->title }}">
                                 @foreach($variant->productVariants as $product_variant)
-                                    <option value="{{ $product_variant->variant }}" {{ isset($variant) && $product_variant->variant == $variant ? 'selected' : '' }}>{{ $product_variant->variant }}</option>
+                                    <option
+                                        value="{{ $product_variant->variant }}" {{ isset($variant) && $product_variant->variant == $variant ? 'selected' : '' }}>{{ $product_variant->variant }}</option>
                                 @endforeach
                             </optgroup>
                         @endforeach
@@ -33,13 +34,15 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">Price Range</span>
                         </div>
-                        <input type="text" name="price_from" value="{{ isset($price_from) ? $price_from : old('price_from') }}"
+                        <input type="text" name="price_from"
+                               value="{{ isset($price_from) ? $price_from : old('price_from') }}"
                                aria-label="First name" placeholder="From"
                                class="form-control">
                         <span class="text-danger">{{ $errors->first('price_from') }}</span>
 
                         <input type="text" name="price_to" aria-label="Last name"
-                               value="{{ isset($price_to) ? $price_to : old('price_to') }}" placeholder="To" class="form-control">
+                               value="{{ isset($price_to) ? $price_to : old('price_to') }}" placeholder="To"
+                               class="form-control">
                         <span class="text-danger">{{ $errors->first('price_to') }}</span>
 
                     </div>
@@ -81,9 +84,16 @@
 
                                     <dt class="col-sm-3 pb-0">
                                         @foreach ($product->variantPrices as $k=> $variant_price)
-                                            <p style="white-space: nowrap;margin-bottom: 8px">{{ @$variant_price->variantOne->variant }}
-                                                / {{ @$variant_price->variantTwo->variant }}
-                                                / {{ @$variant_price->variantThree->variant }}</p>
+                                            <p style="white-space: nowrap;margin-bottom: 8px">
+                                                @if ($variant_price->variantOne)
+                                                    {{ @$variant_price->variantOne->variant }}
+                                                @endif
+                                                @if ($variant_price->variantTwo)
+                                                    / {{ @$variant_price->variantTwo->variant }}
+                                                @endif
+                                                @if ($variant_price->variantThree)
+                                                    / {{ @$variant_price->variantThree->variant }}
+                                                @endif
                                         @endforeach
                                     </dt>
                                     <dd class="col-sm-9">

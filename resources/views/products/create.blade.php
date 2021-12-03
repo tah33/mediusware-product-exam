@@ -8,3 +8,6 @@
         <create-product :variants="{{ $variants }}">Loading</create-product>
     </div>
 @endsection
+@push('js')
+    <script>window.token = {csrfToken: '{{ csrf_token() }}'}</script>
+@endpush

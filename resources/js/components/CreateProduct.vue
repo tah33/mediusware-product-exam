@@ -24,11 +24,10 @@
                         <h6 class="m-0 font-weight-bold text-primary">Media</h6>
                     </div>
                     <div class="card-body border">
-                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
+                        <vue-dropzone ref="myVueDropzone" id="dropzone" v-on:vdropzone-success="uploadSuccess" :options="dropzoneOptions"></vue-dropzone>
                     </div>
                 </div>
             </div>
-
             <div class="col-md-6">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -126,10 +125,10 @@ export default {
             ],
             product_variant_prices: [],
             dropzoneOptions: {
-                url: 'https://httpbin.org/post',
+                url: '/product/images',
                 thumbnailWidth: 150,
                 maxFilesize: 0.5,
-                headers: {"My-Awesome-Header": "header value"}
+                headers: { "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
             }
         }
     },
@@ -187,7 +186,7 @@ export default {
                 product_variant: this.product_variant,
                 product_variant_prices: this.product_variant_prices
             }
-
+            console.log(this.images);
 
             axios.post('/product', product).then(response => {
                 console.log(response.data);
@@ -196,6 +195,9 @@ export default {
             })
 
             console.log(product);
+        },
+        uploadSuccess: function(file, response) {
+            this.images.push(response);
         }
 
 
