@@ -10,6 +10,8 @@ class Product extends Model
         'title', 'sku', 'description'
     ];
 
+    protected $appends = ['total_variants','variant_price'];
+
     public function variants(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(ProductVariant::class);
@@ -20,4 +22,20 @@ class Product extends Model
         return $this->hasMany(ProductVariantPrice::class);
     }
 
+    public function images(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(ProductImage::class);
+    }
+
+    public function getTotalVariantsAttribute()
+    {
+        return $this->variants()->with(['variant.productVariants'=>function($query){
+            $query->where('product_id',$this->id)->select('variant_id','variant');
+        }])->groupBy('variant_id')->get();
+    }
+
+    public function getVariantPriceAttribute()
+    {
+        return $this->variantPrices()->with('variantOne','variantTwo','variantThree')->get();
+    }
 }

@@ -10,4 +10,9 @@ class ProductVariant extends Model
     {
         return $this->hasMany(ProductVariantPrice::class);
     }
+
+    public function variant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Variant::class);
+    }
 }
